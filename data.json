@@ -1,0 +1,48 @@
+{
+  "lastUpdated": "2026-07-28",
+  "news": [
+    { "title": "🔴 A股三大指数今日收盘涨跌一览", "url": "https://finance.sina.com.cn" },
+    { "title": "📈 北向资金净流入创近期新高", "url": "https://finance.sina.com.cn" },
+    { "title": "🌍 国际原油价格盘中异动", "url": "https://finance.sina.com.cn" },
+    { "title": "💼 证监会发布最新监管政策", "url": "https://finance.sina.com.cn" },
+    { "title": "🏛️ 央行公开市场操作公告", "url": "https://finance.sina.com.cn" },
+    { "title": "📊 宏观经济数据今日发布", "url": "https://finance.sina.com.cn" },
+    { "title": "🔋 新能源产业链最新动态", "url": "https://finance.sina.com.cn" },
+    { "title": "🏠 房地产政策迎来新调整", "url": "https://finance.sina.com.cn" },
+    { "title": "💰 人民币汇率波动引关注", "url": "https://finance.sina.com.cn" },
+    { "title": "📱 科技巨头发布季度财报", "url": "https://finance.sina.com.cn" }
+  ],
+  "finance_news": [
+    { "title": "📈 沪深300指数成分股调整生效", "url": "https://finance.sina.com.cn" },
+    { "title": "💰 央行连续开展逆回购操作", "url": "https://finance.sina.com.cn" },
+    { "title": "🔋 新能源车销量同比大增", "url": "https://finance.sina.com.cn" },
+    { "title": "🏦 五大行存款利率最新调整", "url": "https://finance.sina.com.cn" },
+    { "title": "📊 公募基金二季报密集披露", "url": "https://finance.sina.com.cn" },
+    { "title": "🌏 美联储利率决议前瞻", "url": "https://finance.sina.com.cn" }
+  ],
+  "nail": [
+    { "title": "冰透果冻猫眼美甲教程", "url": "https://www.douyin.com", "platform": "douyin" },
+    { "title": "落日腮红美甲 黄皮天菜", "url": "https://www.douyin.com", "platform": "douyin" },
+    { "title": "贝母碎片极简裸甲 高级感", "url": "https://www.douyin.com", "platform": "douyin" },
+    { "title": "人鱼尾美甲 夏日爆款", "url": "https://www.douyin.com", "platform": "douyin" },
+    { "title": "手绘小雏菊美甲 清新田园", "url": "https://www.douyin.com", "platform": "douyin" },
+    { "title": "Baby奶蓝法式 2026最美", "url": "https://www.douyin.com", "platform": "douyin" },
+    { "title": "波点蓝法式 时尚前沿", "url": "https://www.douyin.com", "platform": "douyin" },
+    { "title": "碎冰蓝闪粉 清凉一夏", "url": "https://www.douyin.com", "platform": "douyin" }
+  ],
+  "finance_tip": {
+    "topic": "资产配置的不可能三角",
+    "summary": "收益性、安全性、流动性三者难以兼得。普通人应先用存款和货币基金保流动性，再用债券和指数基金追求稳健收益，最后才考虑股票等高风险资产。"
+  },
+  "meal": {
+    "name": "高蛋白均衡餐",
+    "cal": 680,
+    "protein": 42,
+    "foods": ["糙米饭 80g", "鸡胸肉 150g", "西兰花 150g", "牛油果 半个"],
+    "tip": "训练日首选，蛋白充足"
+  },
+  "sources": {
+    "api": "orz.ai hot list + fallback library",
+    "generated_at": "2026-07-28T00:00:00.000Z"
+  }
+}
