@@ -1,35 +1,35 @@
-name: 爆单的林舒琪 · 每日自动抓取
+name: 每日数据更新
 
 on:
   schedule:
-    # 每天北京时间早上 8:00 自动运行（UTC 0:00）
-    - cron: '0 0 * * *'
-  workflow_dispatch:  # 允许手动点击运行
+    - cron: '0 8 * * *'   # 每天北京时间 16:00 跑（UTC 08:00）
+  workflow_dispatch:        # 允许手动触发
 
 jobs:
-  update-data:
+  update:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
-      - name: 📦 检出代码
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: 🚀 设置 Node.js
+      - name: 设置 Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.20.2'
+          node-version: '20'
 
-      - name: 📥 安装依赖
-        run: npm install axios cheerio node-fetch
-
-      - name: 🔄 抓取今日数据
-        run: node generate-data.js
-
-      - name: 💾 提交更新
+      - name: 生成数据文件
         run: |
-          git config --global user.name '爆单林舒琪 Bot'
-          git config --global user.email 'bot@example.com'
-          git add data.json
-          git diff --quiet && git diff --staged --quiet || git commit -m "🤖 每日自动更新数据 $(date +'%Y-%m-%d')"
+          echo "数据更新时间: $(date +'%Y-%m-%d %H:%M:%S')" > update-log.txt
+          node -e "
+          const fs = require('fs');
+          const data = require('./data.js');
+          fs.writeFileSync('data.json', JSON.stringify(data, null, 2));
+          console.log('data.json 已生成');
+          "
+
+      - name: 提交更新
+        run: |
+          git config user.name "自动更新机器人"
+          git config user.email "bot@github.com"
+          git add data.json update-log.txt
+          git commit -m "自动更新数据 $(date +'%Y-%m-%d')" || echo "没有变化需要提交"
           git push
