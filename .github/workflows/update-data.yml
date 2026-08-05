@@ -20,49 +20,32 @@ jobs:
 
       - name: 生成数据文件
         run: |
-          echo "=== 开始执行 ==="
+          # 1. 直接进入 workbench 文件夹（名字绝对正确）
+          cd workbench
           
-          # 1. 进入文件夹（自动识别带空格的中文名）
-          FOLDER="workbench 工作台"
-          echo "正在进入文件夹: $FOLDER"
-          cd "$FOLDER"
+          echo "正在生成 data.json..."
           
-          # 2. 列出当前目录下的文件，证明我们进来了
-          echo "当前目录下的文件有："
-          ls -l
-          
-          # 3. 执行核心转换逻辑
-          echo "开始读取 data.js..."
+          # 2. 执行转换逻辑
           node -e "
           const fs = require('fs');
           try {
             const raw = fs.readFileSync('data.js', 'utf-8');
-            console.log('✅ 成功读取 data.js，大小:', raw.length);
-            
             const match = raw.match(/const DB = (\{[\s\S]*?\});/);
             if (!match) { 
-              console.error('❌ 严重错误：在 data.js 中找不到 const DB = ... 的数据块'); 
+              console.error('❌ 在 data.js 中找不到 DB 数据'); 
               process.exit(1); 
             }
             const data = eval('(' + match[1] + ')');
             fs.writeFileSync('../data.json', JSON.stringify(data, null, 2));
-            console.log('🎉 成功生成 data.json！');
+            console.log('✅ data.json 生成成功！');
           } catch (err) {
-            console.error('💥 发生未知错误:', err);
+            console.error('❌ 发生错误:', err);
             process.exit(1);
           }
           "
           
-          # 4. 回到根目录
           cd ..
-          
-          # 5. 再次列出文件，证明 data.json 生成了
-          echo "最终仓库根目录下的文件："
-          ls -l
-          
-          # 6. 【关键】强制暂停 10 秒，让你有时间展开日志看结果！
-          echo "脚本执行完毕，等待 10 秒以便查看日志..."
-          sleep 10
+          echo "更新完成！"
 
       - name: 提交更新
         run: |
