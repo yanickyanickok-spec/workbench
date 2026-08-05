@@ -20,44 +20,54 @@ jobs:
 
       - name: 生成数据文件
         run: |
-          # 使用引号包裹路径，彻底解决中文、空格、特殊字符问题
+          echo "=== 开始执行 ==="
+          
+          # 1. 进入文件夹（自动识别带空格的中文名）
           FOLDER="workbench 工作台"
-          
-          # 检查文件夹是否真的存在（做个保险）
-          if [ ! -d "$FOLDER" ]; then
-            echo "错误：找不到文件夹 '$FOLDER'"
-            echo "当前目录下的文件夹有："
-            ls -l
-            exit 1
-          fi
-          
-          echo "正在进入文件夹..."
+          echo "正在进入文件夹: $FOLDER"
           cd "$FOLDER"
           
+          # 2. 列出当前目录下的文件，证明我们进来了
+          echo "当前目录下的文件有："
+          ls -l
+          
+          # 3. 执行核心转换逻辑
+          echo "开始读取 data.js..."
           node -e "
           const fs = require('fs');
           try {
             const raw = fs.readFileSync('data.js', 'utf-8');
+            console.log('✅ 成功读取 data.js，大小:', raw.length);
+            
             const match = raw.match(/const DB = (\{[\s\S]*?\});/);
             if (!match) { 
-              console.error('❌ 在 data.js 中找不到 DB 数据，请检查文件内容'); 
+              console.error('❌ 严重错误：在 data.js 中找不到 const DB = ... 的数据块'); 
               process.exit(1); 
             }
             const data = eval('(' + match[1] + ')');
             fs.writeFileSync('../data.json', JSON.stringify(data, null, 2));
-            console.log('✅ data.json 已成功生成');
+            console.log('🎉 成功生成 data.json！');
           } catch (err) {
-            console.error('❌ 读取文件失败:', err);
+            console.error('💥 发生未知错误:', err);
             process.exit(1);
           }
           "
+          
+          # 4. 回到根目录
           cd ..
-          echo "更新时间: $(date +'%Y-%m-%d %H:%M:%S')" > update-log.txt
+          
+          # 5. 再次列出文件，证明 data.json 生成了
+          echo "最终仓库根目录下的文件："
+          ls -l
+          
+          # 6. 【关键】强制暂停 10 秒，让你有时间展开日志看结果！
+          echo "脚本执行完毕，等待 10 秒以便查看日志..."
+          sleep 10
 
       - name: 提交更新
         run: |
           git config user.name "自动更新机器人"
           git config user.email "bot@github.com"
-          git add data.json update-log.txt
+          git add data.json
           git commit -m "自动更新数据 $(date +'%Y-%m-%d')" || echo "没有变化需要提交"
           git push
