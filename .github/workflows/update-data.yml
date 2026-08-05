@@ -20,14 +20,12 @@ jobs:
 
       - name: 生成数据文件
         run: |
-          cd workbench
-          node -e 'const fs=require("fs");const r=fs.readFileSync("data.js","utf-8");const s=r.indexOf("{");const e=r.lastIndexOf("}");const d=JSON.parse(r.substring(s,e+1));fs.writeFileSync("../data.json",JSON.stringify(d,null,2));console.log("done");'
-          cd ..
+          node -e 'const fs=require("fs");const r=fs.readFileSync("data.js","utf-8");const s=r.indexOf("{");const e=r.lastIndexOf("}");const d=JSON.parse(r.substring(s,e+1));fs.writeFileSync("data.json",JSON.stringify(d,null,2));console.log("done");'
 
       - name: 提交更新
         run: |
           git config user.name "bot"
           git config user.email "bot@github.com"
-          git add data.json || true
-          git commit -m "update" || true
-          git push || true
+          git add data.json
+          git commit -m "自动更新数据 $(date +'%Y-%m-%d')" || echo "没有变化"
+          git push
