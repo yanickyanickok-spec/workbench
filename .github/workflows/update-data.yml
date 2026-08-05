@@ -20,8 +20,15 @@ jobs:
 
       - name: 生成数据文件
         run: |
-          # === 救命关键：强制拉取完整代码，确保子文件夹能被找到 ===
-          git pull
+          # === 终极暴力拉取：强制展开所有文件夹和子模块 ===
+          git fetch --unshallow
+          git checkout main  # 确保你的分支名是 main，如果是 master 就改成 master
+          
+          echo "正在强制拉取所有历史记录和子文件夹..."
+          git pull --recurse-submodules --force
+          
+          echo "当前目录下的所有文件夹和文件："
+          ls -la
           
           echo "正在进入 workbench 文件夹..."
           cd workbench
@@ -51,7 +58,7 @@ jobs:
           echo "更新完成！"
 
       - name: 提交更新
-        run: |
+        run: 
           git config user.name "自动更新机器人"
           git config user.email "bot@github.com"
           git add data.json
