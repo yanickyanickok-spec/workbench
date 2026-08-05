@@ -1,494 +1,110 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>爆单的林舒琪</title>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="爆单林舒琪">
-<style>
-:root{--blue:#3b7dd8;--blue-deep:#0a1628;--blue-medium:#1a3a6a;--blue-light:#eef4fb;--gold:#FFD700;--green:#34C759;--red:#FF3B30;--radius:20px;--shadow:0 4px 20px rgba(59,125,216,.15);--safe-top:env(safe-area-inset-top);--safe-bottom:env(safe-area-inset-bottom);}
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;}
-body{background:var(--blue-light);color:#333;min-height:100vh;padding-top:var(--safe-top);padding-bottom:calc(var(--safe-bottom) + 20px);-webkit-font-smoothing:antialiased;}
-.sidebar{position:fixed;top:0;left:0;height:100%;width:280px;background:linear-gradient(180deg,var(--blue-deep),var(--blue-medium));transform:translateX(-100%);transition:transform .3s;z-index:1000;padding:calc(20px + var(--safe-top)) 0 20px;display:flex;flex-direction:column;color:#fff;overflow-y:auto;}
-.sidebar.open{transform:translateX(0);box-shadow:5px 0 30px rgba(0,0,0,.3);}
-.profile-section{text-align:center;padding:20px;border-bottom:1px solid rgba(255,255,255,.1);cursor:pointer;}
-.avatar{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--gold));display:flex;align-items:center;justify-content:center;font-size:35px;margin:0 auto 10px;border:3px solid var(--gold);}
-.profile-name{font-size:1.2rem;font-weight:700;color:var(--gold);}
-.profile-sub{font-size:.75rem;opacity:.7;margin-top:3px;}
-.nav-list{flex:1;padding:15px 12px;display:flex;flex-direction:column;gap:4px;}
-.nav-item{display:flex;align-items:center;gap:12px;padding:13px 16px;border-radius:12px;cursor:pointer;transition:all .2s;font-size:.95rem;}
-.nav-item:active{background:rgba(255,255,255,.1);}
-.nav-item.active{background:var(--blue);font-weight:600;}
-.nav-icon{font-size:1.3rem;width:26px;text-align:center;}
-.sidebar-footer{padding:12px;display:flex;gap:8px;border-top:1px solid rgba(255,255,255,.1);}
-.footer-btn{flex:1;padding:10px;border:none;border-radius:10px;background:rgba(255,255,255,.1);color:#fff;font-size:.8rem;cursor:pointer;}
-.main{min-height:100vh;transition:margin-left .3s;}
-@media(min-width:768px){.main{margin-left:280px;}.sidebar{transform:translateX(0);}}
-.topbar{display:flex;align-items:center;gap:15px;padding:15px 20px;padding-top:calc(15px + var(--safe-top));background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.05);position:sticky;top:0;z-index:100;}
-.menu-btn{display:none;background:none;border:none;font-size:1.5rem;cursor:pointer;padding:5px;}
-@media(max-width:767px){.menu-btn{display:block;}}
-.page-title{font-size:1.3rem;font-weight:700;color:var(--blue-deep);}
-.content{padding:20px;max-width:900px;margin:0 auto;}
-.welcome-banner{background:linear-gradient(135deg,var(--blue-deep),var(--blue-medium),var(--blue));border-radius:var(--radius);padding:25px;color:#fff;margin-bottom:25px;position:relative;overflow:hidden;}
-.welcome-banner::after{content:'\uD83D\uDCB0';position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:80px;opacity:.15;}
-.welcome-greeting{font-size:.9rem;opacity:.85;}
-.welcome-name{font-size:2rem;font-weight:800;color:var(--gold);margin:5px 0;}
-.welcome-date{font-size:.85rem;opacity:.75;}
-.rich-index{margin-top:20px;background:rgba(255,255,255,.1);border-radius:12px;padding:15px;}
-.rich-index-label{font-size:.85rem;display:flex;justify-content:space-between;}
-.rich-index-value{color:var(--gold);font-weight:700;font-size:1.1rem;}
-.rich-index-bar{height:10px;background:rgba(255,255,255,.15);border-radius:5px;margin-top:8px;overflow:hidden;}
-.rich-index-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--gold));border-radius:5px;transition:width .8s;width:0%;}
-.checkin-card{background:#fff;border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);margin-bottom:25px;}
-.checkin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
-.checkin-title{font-size:1.1rem;font-weight:700;color:var(--blue-deep);}
-.streak-badge{background:var(--blue-light);color:var(--blue);padding:4px 12px;border-radius:15px;font-size:.85rem;font-weight:600;}
-.checkin-body{display:flex;align-items:center;gap:20px;}
-.progress-ring{width:80px;height:80px;border-radius:50%;flex-shrink:0;background:conic-gradient(var(--blue) 0%,#e0e0e0 0%);display:flex;align-items:center;justify-content:center;position:relative;}
-.progress-ring::before{content:'';position:absolute;width:62px;height:62px;background:#fff;border-radius:50%;}
-.ring-text{position:relative;z-index:1;font-weight:700;color:var(--blue);font-size:1.1rem;}
-.tasks-grid{flex:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}
-.task-item{display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px 12px;background:var(--blue-light);border-radius:10px;transition:all .2s;user-select:none;}
-.task-item:active{transform:scale(.97);}
-.task-item.checked{background:rgba(52,199,89,.1);}
-.task-item.checked span{color:var(--green);}
-.task-checkbox{width:18px;height:18px;border:2px solid var(--blue);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
-.task-item.checked .task-checkbox{background:var(--green);border-color:var(--green);}
-.task-item.checked .task-checkbox::after{content:'\2713';color:#fff;font-size:12px;font-weight:bold;}
-.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;}
-.func-card{background:#fff;border-radius:var(--radius);padding:20px 18px;box-shadow:var(--shadow);cursor:pointer;transition:all .2s;border:2px solid transparent;position:relative;}
-.func-card:active{transform:translateY(-3px);border-color:var(--blue);}
-.func-card-icon{width:50px;height:50px;border-radius:14px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:12px;}
-.func-card-title{font-size:.95rem;font-weight:600;color:var(--blue-deep);}
-.auto-badge{position:absolute;top:10px;right:10px;background:var(--gold);color:var(--blue-deep);font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:8px;}
-.page{display:none;}
-.page.active{display:block;animation:fadeIn .3s;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-.panel{background:#fff;border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);margin-bottom:20px;}
-.panel-title{font-size:1.15rem;font-weight:700;color:var(--blue-deep);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
-.auto-banner{background:linear-gradient(135deg,#eef4fb,#e8f0fe);border:1px solid #d0e0fb;border-radius:12px;padding:12px 15px;margin-bottom:15px;display:flex;align-items:center;gap:10px;color:var(--blue);}
-.auto-banner .dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-.content-card{background:var(--blue-light);border-radius:12px;padding:16px;margin-bottom:12px;border-left:4px solid var(--blue);cursor:pointer;transition:transform .2s;}
-.content-card:active{transform:scale(.98);}
-.content-card h4{color:var(--blue-deep);margin-bottom:6px;font-size:.95rem;}
-.content-card p{font-size:.85rem;color:#555;line-height:1.5;}
-.rank{display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;background:var(--blue);color:#fff;border-radius:6px;font-size:.75rem;font-weight:700;margin-right:8px;}
-.rank.top{background:var(--red);}
-.tag{display:inline-block;background:rgba(59,125,216,.1);color:var(--blue);padding:2px 8px;border-radius:6px;font-size:.7rem;margin-right:6px;margin-top:6px;}
-.btn{padding:10px 20px;border:none;border-radius:12px;background:var(--blue);color:#fff;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;justify-content:center;}
-.btn:active{transform:scale(.96);}
-.btn-gold{background:linear-gradient(135deg,var(--gold),#FFA500);color:var(--blue-deep);}
-.btn-green{background:var(--green);}
-.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
-.meal-card{background:linear-gradient(135deg,#eef4fb,#f0f7ff);border-radius:12px;padding:18px;margin-bottom:12px;border:1px solid #d0e0fb;}
-.meal-card h4{color:var(--blue-deep);margin-bottom:8px;}
-.meal-cal{font-size:1.3rem;font-weight:800;color:var(--blue);}
-.meal-protein{color:var(--green);font-weight:600;}
-.finance-tip{background:linear-gradient(135deg,#fff9e6,#fff3cc);border-radius:12px;padding:18px;margin-bottom:12px;border-left:4px solid var(--gold);}
-.editor{width:100%;padding:12px 15px;border:2px solid var(--blue-light);border-radius:12px;font-size:.9rem;outline:none;transition:border-color .2s;font-family:inherit;resize:vertical;min-height:100px;margin-bottom:10px;box-sizing:border-box;}
-.editor:focus{border-color:var(--blue);}
-.todo-input-row{display:flex;gap:10px;margin-bottom:15px;}
-.todo-input{flex:1;padding:12px 15px;border:2px solid var(--blue-light);border-radius:12px;font-size:.9rem;outline:none;box-sizing:border-box;}
-.todo-input:focus{border-color:var(--blue);}
-.todo-item{display:flex;align-items:center;gap:10px;padding:12px 15px;background:var(--blue-light);border-radius:10px;margin-bottom:8px;cursor:pointer;}
-.todo-item.done span{text-decoration:line-through;color:#999;}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;display:none;backdrop-filter:blur(3px);}
-.overlay.show{display:block;}
-.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.9);background:#fff;border-radius:var(--radius);padding:25px;z-index:1001;width:90%;max-width:500px;display:none;box-shadow:0 20px 60px rgba(0,0,0,.3);opacity:0;transition:all .3s;max-height:80vh;overflow-y:auto;}
-.modal.show{display:block;transform:translate(-50%,-50%) scale(1);opacity:1;}
-.modal h3{color:var(--blue-deep);margin-bottom:15px;}
-.modal-close{position:absolute;top:15px;right:15px;background:none;border:none;font-size:1.5rem;cursor:pointer;color:#999;}
-.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(100px);background:var(--blue-deep);color:#fff;padding:14px 24px;border-radius:12px;z-index:2000;opacity:0;transition:all .3s;font-size:.9rem;box-shadow:0 5px 20px rgba(0,0,0,.3);}
-.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>爆单的林舒琪</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<aside class="sidebar" id="sidebar">
-<div class="profile-section" onclick="openEditProfile()">
-<div class="avatar" id="sidebarAvatar">\uD83D\uDC30</div>
-<div class="profile-name" id="sidebarName">爆单的林舒琪</div>
-<div class="profile-sub" id="sidebarSub">\uD83D\uDCB0 搞钱\u00B7成长\u00B7爆单中</div>
+<div class="app">
+
+    <!-- 顶部栏 -->
+    <header class="top-bar">
+        <div class="logo">
+            <span class="avatar">林</span>
+            <div>
+                <div class="app-name">爆单的林舒琪</div>
+                <div class="app-sub">美甲生意工作台</div>
+            </div>
+        </div>
+        <div class="time" id="clock">--:--</div>
+    </header>
+
+    <!-- 分栏 Tab 切换 -->
+    <nav class="tabs">
+        <button class="tab active" data-tab="overview">总览</button>
+        <button class="tab" data-tab="xiaohongshu">小红书</button>
+        <button class="tab" data-tab="douyin">抖音</button>
+        <button class="tab" data-tab="tasks">待办</button>
+        <button class="tab" data-tab="finance">理财</button>
+        <button class="tab" data-tab="health">健康</button>
+    </nav>
+
+    <!-- 内容区 -->
+    <main class="content">
+
+        <!-- 总览页 -->
+        <section class="tab-pane active" id="pane-overview">
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-num" id="stat-xhs">0</div>
+                    <div class="stat-label">小红书爆款</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" id="stat-douyin">0</div>
+                    <div class="stat-label">抖音爆款</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" id="stat-tasks">0</div>
+                    <div class="stat-label">待办事项</div>
+                </div>
+            </div>
+            <div class="quick-note">
+                <h3>📌 今日重点</h3>
+                <p id="daily-focus">加载中...</p>
+            </div>
+            <a class="edit-btn" href="https://github.com/yanickyanickok-spec/workbench/edit/main/data.js" target="_blank">
+                ✏️ 编辑数据
+            </a>
+        </section>
+
+        <!-- 小红书页 -->
+        <section class="tab-pane" id="pane-xiaohongshu">
+            <div class="section-title">
+                <span>📕</span> 小红书美甲爆款
+            </div>
+            <div class="card-list" id="xhs-list"></div>
+        </section>
+
+        <!-- 抖音页 -->
+        <section class="tab-pane" id="pane-douyin">
+            <div class="section-title">
+                <span>🎵</span> 抖音美甲爆款
+            </div>
+            <div class="card-list" id="douyin-list"></div>
+        </section>
+
+        <!-- 待办页 -->
+        <section class="tab-pane" id="pane-tasks">
+            <div class="section-title">
+                <span>✅</span> 今日待办
+            </div>
+            <div class="todo-list" id="todo-list"></div>
+        </section>
+
+        <!-- 理财页 -->
+        <section class="tab-pane" id="pane-finance">
+            <div class="section-title">
+                <span>💰</span> 私人理财
+            </div>
+            <div class="card-list" id="finance-list"></div>
+        </section>
+
+        <!-- 健康页 -->
+        <section class="tab-pane" id="pane-health">
+            <div class="section-title">
+                <span>💪</span> 健身 & 营养
+            </div>
+            <div class="card-list" id="health-list"></div>
+        </section>
+
+    </main>
+
 </div>
-<nav class="nav-list" id="navList"></nav>
-<div class="sidebar-footer">
-<button class="footer-btn" onclick="location.reload()">\uD83D\uDD04 刷新</button>
-<button class="footer-btn" onclick="openEditProfile()">\u270F\uFE0F 编辑</button>
-</div>
-</aside>
 
-<main class="main">
-<header class="topbar">
-<button class="menu-btn" onclick="toggleSidebar()">\u2630</button>
-<h1 class="page-title" id="currentPageTitle">仪表盘</h1>
-</header>
-<div class="content" id="contentArea"></div>
-</main>
-
-<div class="overlay" id="overlay" onclick="closeAllModals()"></div>
-<div class="modal" id="editModal">
-<h3>\u270F\uFE0F 编辑个人资料</h3>
-<div style="margin-bottom:15px;"><label style="display:block;font-size:.85rem;color:#666;margin-bottom:6px;">显示名称</label><input class="editor" id="editName" value="" style="margin-bottom:0;"></div>
-<div style="margin-bottom:15px;"><label style="display:block;font-size:.85rem;color:#666;margin-bottom:6px;">头像 Emoji</label><input class="editor" id="editAvatar" value="" style="margin-bottom:0;"></div>
-<div style="margin-bottom:15px;"><label style="display:block;font-size:.85rem;color:#666;margin-bottom:6px;">副标题</label><input class="editor" id="editSub" value="" style="margin-bottom:0;"></div>
-<div style="display:flex;gap:10px;margin-top:25px;">
-<button class="btn" style="flex:1;background:var(--blue-light);color:var(--blue);" onclick="closeAllModals()">取消</button>
-<button class="btn btn-gold" style="flex:1;" onclick="saveProfile()">\uD83D\uDCBE 保存</button>
-</div>
-</div>
-<div class="modal" id="detailModal">
-<button class="modal-close" onclick="closeAllModals()">&times;</button>
-<div id="detailContent"></div>
-</div>
-<div class="toast" id="toast"></div>
-
-<script>
-const STORAGE_KEY='bangdan_v6';
-let appData={profile:{name:'爆单的林舒琪',avatar:'\uD83D\uDC30',sub:'\uD83D\uDCB0 搞钱\u00B7成长\u00B7爆单中'},checkin:{},streak:0,todos:[],fitness_notes:'',meal_notes:'',lastUpdate:''};
-let dailyData=null;
-let currentPage='dashboard';
-
-const MODULES=[
-{key:'dashboard',icon:'\uD83C\uDFE0',name:'仪表盘'},
-{key:'news',icon:'\uD83D\uDD34',name:'新闻热点',auto:true},
-{key:'finance',icon:'\uD83C\uDF93',name:'理财知识',auto:true},
-{key:'xhs_nail',icon:'\uD83D\uDC85',name:'小红书美甲',auto:true},
-{key:'dy_nail',icon:'\u2728',name:'抖音美甲',auto:true},
-{key:'meal',icon:'\uD83C\uDF57',name:'增肌营养餐',auto:true},
-{key:'fitness',icon:'\uD83D\uDCAA',name:'健身计划'},
-{key:'todos',icon:'\uD83D\uDCCB',name:'待办清单'},
-];
-
-const TASKS=[
-{id:'fitness',label:'\uD83D\uDCAA 健身训练'},{id:'reading',label:'\uD83D\uDCD6 每日阅读'},
-{id:'study',label:'\uD83D\uDCDA 学习提升'},{id:'water',label:'\uD83D\uDCA7 喝够8杯水'},
-{id:'finance',label:'\uD83D\uDCC8 理财复盘'},{id:'review',label:'\u270D\uFE0F 每日复盘'},
-];
-
-const BUILTIN_NEWS=[
-{title:'\uD83D\uDD34 央行宣布降准0.5个百分点',content:'中国人民银行决定下调金融机构存款准备金率0.5个百分点，释放长期资金约1万亿元。此举旨在保持流动性合理充裕，支持实体经济发展。'},
-{title:'\uD83D\uDCC8 A股三大指数集体收涨',content:'沪指涨1.2%，深成指涨1.5%，创业板指涨1.8%。新能源、半导体板块领涨，市场成交额突破万亿。'},
-{title:'\uD83C\uDF0D 国际油价创年内新高',content:'受地缘政治影响，布伦特原油价格突破每桶90美元。分析师预计短期内油价将维持高位震荡。'},
-{title:'\uD83D\uDCBC 证监会发布新规规范减持行为',content:'新规要求上市公司大股东减持前需提前披露，且不得破发、破净减持。此举有利于保护中小投资者利益。'},
-{title:'\uD83C\uDFE6 六大行下调存款利率',content:'工、农、中、建、交、邮储六大国有银行集体下调人民币存款利率，一年期定存利率降至1.45%。'},
-{title:'\uD83D\uDCCA 上半年GDP同比增长5.0%',content:'国家统计局数据显示，上半年国内生产总值同比增长5.0%，经济延续回升向好态势。'},
-{title:'\uD83D\uDD0B 新能源汽车销量同比大增35%',content:'中汽协数据显示，6月新能源汽车销量达95万辆，渗透率突破40%。比亚迪、特斯拉领跑市场。'},
-{title:'\uD83C\uDFE0 多地优化房地产政策',content:'一线城市相继出台楼市新政，包括降低首付比例、优化限购措施等，市场预期有望回暖。'},
-{title:'\uD83D\uDCB0 人民币汇率企稳回升',content:'在岸人民币兑美元汇率回升至7.15附近，外汇市场韧性增强，跨境资金流动平稳有序。'},
-{title:'\uD83D\uDCF1 苹果发布iPhone 17系列',content:'全新A19芯片、钛金属边框、4800万像素三摄，起售价5999元。预售首日即告罄。'},
-];
-
-const FINANCE_TIPS=[
-{topic:'资产配置的不可能三角',summary:'收益性、安全性、流动性三者难以兼得。普通人应先用存款和货币基金保流动性，再用债券和指数基金追求稳健收益，最后才考虑股票等高风险资产。'},
-{topic:'4321理财法则',summary:'40%稳健理财（定存/国债/货基）+ 30%增值投资（基金/股票）+ 20%应急备用金 + 10%保险保障。先保底再进攻。'},
-{topic:'72法则',summary:'72 ÷ 年化收益率 = 本金翻倍所需年数。年化8%\u21929年翻倍；年化12%\u21926年翻倍。时间是复利最好的朋友。'},
-{topic:'指数基金定投',summary:'定期定额买入沪深300/中证500等宽基指数，平摊成本，微笑曲线效应让市场波动变成你的朋友。'},
-{topic:'紧急备用金',summary:'预留3-6个月生活费，存放在随时可取的地方（货币基金/活期）。这是一切投资的地基。'},
-{topic:'复利的力量',summary:'每月存2000元，年化8%，30年后\u2248300万。延迟5年起步，结果少近百万。越早开始越好。'},
-{topic:'风险管理优先',summary:'先配齐百万医疗险+重疾险+意外险，年保费控制在收入5%以内。保险不是投资，是防止一夜回到解放前。'},
-];
-
-const XHS_NAIL=[
-{kw:'冰透果冻猫眼',desc:'清透底色+猫眼磁吸，阳光下像果冻一样晶莹剔透，黄皮友好，显白神器。'},
-{kw:'落日腮红美甲',desc:'指尖渐变橙粉色，像日落时的晚霞，温柔又元气，适合春夏季节。'},
-{kw:'贝母碎片极简',desc:'透明底色上点缀天然贝母碎片，每一片纹理都独一无二，低调的高级感。'},
-{kw:'人鱼海洋风',desc:'蓝绿色渐变+细闪银箔，仿佛海底人鱼的鳞片，梦幻又神秘。'},
-{kw:'手绘小雏菊',desc:'白色小雏菊花瓣搭配嫩绿枝叶，清新田园风，减龄必备。'},
-{kw:'微光法式细边',desc:'经典法式的现代演绎，指尖边缘一抹微光，简约不简单。'},
-{kw:'奶茶色晕染',desc:'焦糖奶茶色由深到浅自然晕染，百搭不出错，职场通勤首选。'},
-{kw:'镜面银箔',desc:'透明甲面上铺满银色镜面箔片，反光效果炸裂，拍照超级出片。'},
-];
-
-const DY_NAIL=[
-{title:'冰透果冻猫眼教程',views:'128w',desc:'三步搞定！磁铁停留5秒就有完美猫眼线，手残党也能学会。'},
-{title:'落日腮红甲试色合集',views:'95w',desc:'8款腮红甲色号对比，黄黑皮亲测显白的居然是这一支！'},
-{title:'贝母极简裸甲',views:'156w',desc:'纯欲天花板！透明底+贝母碎片，做完男朋友说好看哭了。'},
-{title:'人鱼尾美甲全过程',views:'203w',desc:'深海人鱼风，蓝绿渐变+碎闪，灯光下美到窒息。'},
-{title:'手绘小雏菊教程',views:'87w',desc:'0基础手绘小雏菊，只需一支细笔，五分钟搞定。'},
-{title:'2026最美法式',views:'312w',desc:'今年最火的Baby奶蓝法式，温柔到骨子里，必做款！'},
-{title:'波点蓝法式',views:'76w',desc:'波点+法式的碰撞，复古又时髦，INS博主都在做。'},
-{title:'碎冰蓝闪粉',views:'134w',desc:'碎冰蓝底色+银色闪粉，像冰雪女王的指尖，清凉一夏。'},
-];
-
-const MEALS=[
-{name:'高蛋白均衡餐',cal:680,p:42,foods:['糙米饭 80g','鸡胸肉 150g','西兰花 150g','牛油果 半个'],tip:'训练日首选，蛋白充足，练后30分钟内补充效果最佳。'},
-{name:'增肌能量餐',cal:750,p:48,foods:['杂粮饭 100g','三文鱼 120g','芦笋 100g','红薯 100g'],tip:'富含Omega-3，促进肌肉恢复，适合大重量训练日。'},
-{name:'快手增肌餐',cal:580,p:38,foods:['全麦面包 2片','煎牛肉 120g','蔬菜沙拉','牛奶 250ml'],tip:'制作简单，10分钟搞定，适合忙碌工作日。'},
-{name:'低脂高蛋白',cal:520,p:45,foods:['荞麦面 80g','虾仁 150g','蒜蓉菠菜','蛋白 2个'],tip:'减脂增肌两不误，碳水适量，蛋白拉满。'},
-{name:'碳水补充餐',cal:650,p:35,foods:['紫薯饭 100g','卤鸡腿 1个','凉拌黄瓜','酸奶 200g'],tip:'训练后快速补能，碳水帮助胰岛素分泌促恢复。'},
-{name:'均衡营养餐',cal:600,p:40,foods:['燕麦粥 50g','煎三文鱼 100g','烤芦笋','坚果一小把'],tip:'全天候营养覆盖，优质脂肪+蛋白+复合碳水。'},
-{name:'爆发力餐',cal:700,p:50,foods:['意大利面 100g','牛肉酱 80g','番茄','蛋白 3个'],tip:'大训练量日首选，充足的碳水和蛋白支撑高强度。'},
-];
-
-const FITNESS_PLANS={
-0:{name:'周日休息日',plan:'\uD83C\uDFC3 有氧+全身：跑步30分钟、波比跳3\u00D715、登山者3\u00D730、拉伸15分钟'},
-1:{name:'周一',plan:'\uD83D\uDCAA 胸部+三头+核心：平板卧推4\u00D712、上斜哑铃推举3\u00D712、绳索下压3\u00D715、卷腹3\u00D720'},
-2:{name:'周二',plan:'\uD83E\uDDB5 腿部+臀部：深蹲4\u00D712、罗马尼亚硬拉3\u00D712、腿举3\u00D715、臀桥3\u00D720'},
-3:{name:'周三',plan:'\uD83C\uDFCB\uFE0F 背部+二头：引体向上4\u00D78、杠铃划船3\u00D712、高位下拉3\u00D712、哑铃弯举3\u00D715'},
-4:{name:'周四',plan:'\uD83C\uDFAF 肩部+核心：站姿推举4\u00D712、侧平举3\u00D715、面拉3\u00D715、平板支撑3\u00D760秒'},
-5:{name:'周五',plan:'\uD83D\uDCAA 胸部+三头：双杠臂屈伸4\u00D712、飞鸟3\u00D715、窄距俯卧撑3\u00D715、俄罗斯转体3\u00D730'},
-6:{name:'周六',plan:'\uD83E\uDDB5 腿部+臀部：前蹲4\u00D710、保加利亚分腿蹲3\u00D712、提踵3\u00D720、臀推3\u00D715'},
-};
-
-// 初始化
-loadLocal();
-fetchDataJson();
-renderSidebar();
-renderPage('dashboard');
-setTimeout(()=>{updateRichIndex();restoreCheckinUI();},200);
-
-function fetchDataJson(){
-fetch('data.json?t='+Date.now()).then(r=>r.json()).then(d=>{
-dailyData=d;
-appData.lastUpdate=d.lastUpdated||'';
-saveLocal();
-if(currentPage!=='dashboard')renderPage(currentPage);
-}).catch(()=>{});
-}
-
-function loadLocal(){try{const s=localStorage.getItem(STORAGE_KEY);if(s)appData={...appData,...JSON.parse(s)};}catch(e){}}
-function saveLocal(){localStorage.setItem(STORAGE_KEY,JSON.stringify(appData));}
-
-function renderSidebar(){
-document.getElementById('navList').innerHTML=MODULES.map(m=>
-`<div class="nav-item ${m.key===currentPage?'active':''}" data-page="${m.key}" onclick="switchPage('${m.key}')">
-<span style="font-size:1.3rem;width:26px;text-align:center;">${m.icon}</span><span>${m.name}</span></div>`).join('');
-document.getElementById('sidebarAvatar').textContent=appData.profile.avatar;
-document.getElementById('sidebarName').textContent=appData.profile.name;
-document.getElementById('sidebarSub').textContent=appData.profile.sub;
-document.title=appData.profile.name;
-}
-function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');}
-
-function switchPage(p){
-currentPage=p;
-document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.page===p));
-document.getElementById('currentPageTitle').textContent=MODULES.find(x=>x.key===p).name;
-renderPage(p);
-document.getElementById('sidebar').classList.remove('open');
-window.scrollTo({top:0,behavior:'smooth'});
-}
-
-function renderPage(page){
-const c=document.getElementById('contentArea');
-switch(page){
-case 'dashboard':c.innerHTML=renderDashboard();bindCheckin();break;
-case 'news':c.innerHTML=renderNews();break;
-case 'finance':c.innerHTML=renderFinance();break;
-case 'xhs_nail':c.innerHTML=renderXhs();break;
-case 'dy_nail':c.innerHTML=renderDy();break;
-case 'meal':c.innerHTML=renderMeal();break;
-case 'fitness':c.innerHTML=renderFitness();break;
-case 'todos':c.innerHTML=renderTodos();break;
-}
-}
-
-function renderDashboard(){
-const today=getTodayKey();
-const tc=(appData.checkin[today]||[]).length;
-const tp=Math.round(tc/TASKS.length*100);
-const ri=calcRichIndex();
-const dataStatus=dailyData?'\uD83D\uDCE1 数据已更新 \u00B7 '+dailyData.lastUpdated:'\uD83D\uDCE1 正在加载数据...';
-return `
-<div class="welcome-banner">
-<div class="welcome-greeting">${getGreeting()}</div>
-<div class="welcome-name">${appData.profile.name}</div>
-<div class="welcome-date">${formatDate(new Date())}</div>
-<div class="rich-index"><div class="rich-index-label"><span>\uD83D\uDCB0 爆单指数</span><span class="rich-index-value">${ri}%</span></div>
-<div class="rich-index-bar"><div class="rich-index-fill" id="richFill" style="width:0%"></div></div></div>
-</div>
-<div class="auto-banner"><span class="dot"></span><div><div style="font-weight:700;">\uD83D\uDCE1 每日自动更新中</div><div style="font-size:.75rem;opacity:.8;">${dataStatus}</div></div></div>
-<div class="checkin-card">
-<div class="checkin-header"><div class="checkin-title">\uD83D\uDCCC 今日打卡</div><div class="streak-badge">\uD83D\uDD25 连续 ${appData.streak} 天</div></div>
-<div class="checkin-body">
-<div class="progress-ring" id="progressRing"><div class="ring-text" id="ringText">${tp}%</div></div>
-<div class="tasks-grid" id="tasksGrid">
-${TASKS.map(t=>`<div class="task-item ${(appData.checkin[today]||[]).includes(t.id)?'checked':''}" data-task="${t.id}"><div class="task-checkbox"></div><span>${t.label}</span></div>`).join('')}
-</div></div>
-<div style="margin-top:15px;font-size:.9rem;color:#666;">${getCheckinTip(tc,TASKS.length)}</div>
-</div>
-<div class="cards-grid">
-${MODULES.filter(m=>m.key!=='dashboard').map(m=>
-`<div class="func-card" onclick="switchPage('${m.key}')">
-<div class="func-card-icon">${m.icon}</div>
-<div class="func-card-title">${m.name}</div>
-${m.auto?'<div class="auto-badge">自动</div>':''}</div>`).join('')}
-</div>`;
-}
-
-function renderNews(){
-const news=(dailyData&&dailyData.news)||BUILTIN_NEWS;
-const src=dailyData?dailyData.lastUpdated:'内置缓存';
-return `
-<div class="auto-banner"><span class="dot"></span><div><div style="font-weight:700;">\uD83D\uDD34 今日新闻热点</div><div style="font-size:.75rem;opacity:.8;">数据来源：orz.ai 热榜 \u00B7 更新于 ${src}</div></div></div>
-<div class="panel"><div class="panel-title">\uD83D\uDD34 新闻热点 \u00B7 点击查看详情</div>
-${news.map((n,i)=>{const t=typeof n==='string'?n:(n.title||'');const c=typeof n==='string'?'':(n.content||n.desc||n.summary||'');return `<div class="content-card" onclick="showDetail('${escJs(t)}','${escJs(c)}')"><h4><span class="rank ${i<3?'top':''}">${i+1}</span>${escHtml(t)}</h4></div>`;}).join('')}
-</div>`;
-}
-
-function renderFinance(){
-const dayIdx=new Date().getDate()%FINANCE_TIPS.length;
-const tip=FINANCE_TIPS[dayIdx];
-return `
-<div class="auto-banner"><span class="dot"></span><div><div style="font-weight:700;">\uD83C\uDF93 每日理财知识</div><div style="font-size:.75rem;opacity:.8;">每天自动轮换 \u00B7 更新于 ${dailyData?dailyData.lastUpdated:'缓存'}</div></div></div>
-<div class="panel"><div class="panel-title">\uD83C\uDF93 今日理财概念</div>
-<div class="finance-tip"><h4 style="margin-bottom:8px;color:var(--blue-deep);">\uD83D\uDCA1 ${tip.topic}</h4><p style="font-size:.9rem;line-height:1.6;">${tip.summary}</p></div>
-<h4 style="margin:15px 0 10px;color:var(--blue-deep);">\uD83D\uDCDA 更多理财概念（点击查看）</h4>
-${FINANCE_TIPS.filter((_,i)=>i!==dayIdx).map(t=>`<div class="content-card" onclick="showDetail('${escJs(t.topic)}','${escJs(t.summary)}')"><h4>${t.topic}</h4></div>`).join('')}
-</div>`;
-}
-
-function renderXhs(){
-const dayIdx=new Date().getDate()%XHS_NAIL.length;
-return `
-<div class="auto-banner"><span class="dot"></span><div><div style="font-weight:700;">\uD83D\uDC85 小红书美甲爆款</div><div style="font-size:.75rem;opacity:.8;">每天自动轮换 \u00B7 更新于 ${dailyData?dailyData.lastUpdated:'缓存'}</div></div></div>
-<div class="panel"><div class="panel-title">\uD83D\uDC85 今日推荐：${XHS_NAIL[dayIdx].kw}</div>
-<div class="meal-card" style="text-align:center;margin-bottom:20px;">
-<div style="font-size:1.3rem;font-weight:700;color:var(--blue-deep);">${XHS_NAIL[dayIdx].kw}</div>
-<p style="margin-top:8px;font-size:.9rem;">${XHS_NAIL[dayIdx].desc}</p></div>
-<h4 style="margin-bottom:10px;color:var(--blue-deep);">\u2728 全部趋势（点击查看详情）</h4>
-${XHS_NAIL.map(x=>`<div class="content-card" onclick="showDetail('\uD83D\uDC85 ${escJs(x.kw)}','${escJs(x.desc)}')"><h4>\uD83D\uDC85 ${x.kw}</h4><p>${x.desc}</p></div>`).join('')}
-</div>`;
-}
-
-function renderDy(){
-return `
-<div class="auto-banner"><span class="dot"></span><div><div style="font-weight:700;">\u2728 抖音美甲爆款</div><div style="font-size:.75rem;opacity:.8;">每天自动轮换 \u00B7 更新于 ${dailyData?dailyData.lastUpdated:'缓存'}</div></div></div>
-<div class="panel"><div class="panel-title">\u2728 抖音美甲 \u00B7 点击查看详情</div>
-${DY_NAIL.map((n,i)=>`<div class="content-card" onclick="showDetail('\u2728 ${escJs(n.title)}','${escJs(n.desc+'\\n\\n播放量：'+n.views)}')"><h4><span class="rank ${i<3?'top':''}">${i+1}</span>\u2728 ${escHtml(n.title)}</h4><span class="tag">\u25B6\uFE0F ${n.views}</span></div>`).join('')}
-</div>`;
-}
-
-function renderMeal(){
-const dayIdx=new Date().getDate()%MEALS.length;
-const m=MEALS[dayIdx];
-return `
-<div class="auto-banner"><span class="dot"></span><div><div style="font-weight:700;">\uD83C\uDF57 增肌营养餐</div><div style="font-size:.75rem;opacity:.8;">每天自动轮换 \u00B7 更新于 ${dailyData?dailyData.lastUpdated:'缓存'}</div></div></div>
-<div class="panel"><div class="panel-title">\uD83C\uDF57 今日推荐：${m.name}</div>
-<div class="meal-card"><h4>\uD83C\uDF71 ${m.name}</h4>
-<div style="margin:8px 0;">\uD83D\uDD25 热量 <span class="meal-cal">${m.cal}</span> kcal &nbsp;|&nbsp; \uD83E\uDD69 蛋白质 <span class="meal-protein">${m.p}g</span></div>
-<div style="font-size:.9rem;">${m.foods.map(f=>'\u2022 '+f).join('<br>')}</div>
-<div style="margin-top:8px;font-size:.8rem;color:var(--blue);">\uD83D\uDCA1 ${m.tip}</div></div>
-<h4 style="margin:15px 0 10px;color:var(--blue-deep);">\uD83D\uDCC5 本周食谱轮换</h4>
-${MEALS.filter((_,i)=>i!==dayIdx).slice(0,3).map(x=>`<div class="content-card" onclick="showDetail('\uD83C\uDF57 ${escJs(x.name)}','${escJs('\uD83D\uDD25热量：'+x.cal+'kcal | \uD83E\uDD69蛋白质：'+x.p+'g\\n\\n食材：'+x.foods.join('\u3001')+'\\n\\n'+x.tip)}')"><h4>${x.name}</h4><p>\uD83D\uDD25${x.cal}kcal \uD83E\uDD69${x.p}g蛋白</p></div>`).join('')}
-<h4 style="margin:20px 0 10px;color:var(--blue-deep);">\uD83D\uDCDD 我的饮食笔记</h4>
-<textarea class="editor" id="mealNotes" placeholder="记录今天的饮食感受、体重变化...">${(appData.meal_notes||'')}</textarea>
-<button class="btn btn-green" onclick="saveMealNotes()">\uD83D\uDCBE 保存笔记</button>
-</div>`;
-}
-
-function renderFitness(){
-const day=new Date().getDay();
-const today=FITNESS_PLANS[day];
-return `
-<div class="panel"><div class="panel-title">\uD83D\uDCAA 健身计划（可直接编辑）</div>
-<div class="meal-card"><h4>\uD83C\uDFAF 今日训练（${['周日','周一','周二','周三','周四','周五','周六'][day]}）</h4>
-<p style="font-size:.95rem;line-height:1.6;margin-top:8px;">${today.plan}</p></div>
-<h4 style="margin:15px 0 10px;color:var(--blue-deep);">\u270F\uFE0F 我的健身笔记（可自由编辑）</h4>
-<textarea class="editor" id="fitnessNotes" placeholder="记录训练感受、重量变化、身体状态...">${(appData.fitness_notes||'')}</textarea>
-<div class="btn-row">
-<button class="btn btn-green" onclick="saveFitnessNotes()">\uD83D\uDCBE 保存笔记</button>
-<button class="btn" onclick="showDetail('\uD83D\uDCAA 本周训练计划','${escJs(Object.values(FITNESS_PLANS).map(p=>p.name+'\uFF1A'+p.plan).join('\\n\\n'))}')">\uD83D\uDCC5 查看全周计划</button>
-</div>
-<h4 style="margin:20px 0 10px;color:var(--blue-deep);">\uD83D\uDCC5 本周训练一览</h4>
-${Object.values(FITNESS_PLANS).map(p=>`<div class="content-card" onclick="showDetail('\uD83D\uDCAA ${escJs(p.name)}','${escJs(p.plan)}')"><h4>${p.name}</h4><p>${p.plan}</p></div>`).join('')}
-</div>`;
-}
-
-function renderTodos(){
-const todos=appData.todos||[];
-return `
-<div class="panel"><div class="panel-title">\uD83D\uDCCB 待办清单</div>
-<div class="todo-input-row"><input class="todo-input" id="todoInput" placeholder="添加新待办..."><button class="btn" onclick="addTodo()">\u2795 添加</button></div>
-<div>${(todos.length?todos.map(t=>`<div class="todo-item ${t.done?'done':''}" onclick="toggleTodo('${t.id}')"><span style="font-size:18px;">${t.done?'\u2705':'\u2B1C'}</span><span style="flex:1;">${escHtml(t.text)}</span><span onclick="event.stopPropagation();delTodo('${t.id}')" style="cursor:pointer;">\uD83D\uDDD1\uFE0F</span></div>`).join(''):'<div style="color:#999;text-align:center;padding:20px;">暂无待办，添加一个吧！</div>')}</div>
-</div>`;
-}
-
-// 打卡
-function bindCheckin(){
-document.querySelectorAll('#tasksGrid .task-item').forEach(item=>{
-item.onclick=()=>{
-const t=item.dataset.task;const today=getTodayKey();
-if(!appData.checkin[today])appData.checkin[today]=[];
-const idx=appData.checkin[today].indexOf(t);
-if(idx>=0){appData.checkin[today].splice(idx,1);item.classList.remove('checked');}
-else{appData.checkin[today].push(t);item.classList.add('checked');}
-calcStreak();updateCheckinUI();saveLocal();
-};
-});
-}
-function updateCheckinUI(){
-const today=getTodayKey();const tc=(appData.checkin[today]||[]).length;const tp=Math.round(tc/TASKS.length*100);
-const rt=document.getElementById('ringText');if(rt)rt.textContent=tp+'%';
-const pr=document.getElementById('progressRing');if(pr)pr.style.background=`conic-gradient(var(--blue) ${tp}%, #e0e0e0 0)`;
-}
-function restoreCheckinUI(){
-const today=getTodayKey();const tc=(appData.checkin[today]||[]).length;const tp=Math.round(tc/TASKS.length*100);
-const rt=document.getElementById('ringText');if(rt)rt.textContent=tp+'%';
-const pr=document.getElementById('progressRing');if(pr)pr.style.background=`conic-gradient(var(--blue) ${tp}%, #e0e0e0 0)`;
-}
-function calcStreak(){
-const today=new Date();let s=0;
-for(let i=0;i<365;i++){const d=new Date(today);d.setDate(d.getDate()-i);const k=formatKey(d);if(appData.checkin[k]&&appData.checkin[k].length>0)s++;else if(i===0&&s===0)s=0;else break;}
-appData.streak=s;
-}
-function calcRichIndex(){
-const s=appData.streak||0;const tc=Object.keys(appData.checkin).length;const dc=(appData.todos||[]).filter(x=>x.done).length;
-return Math.min(100,Math.round(s*10+tc*3+dc*5));
-}
-function updateRichIndex(){
-const ri=calcRichIndex();
-const fill=document.getElementById('richFill');if(fill)fill.style.width=ri+'%';
-document.querySelectorAll('.rich-index-value').forEach(el=>el.textContent=ri+'%');
-}
-
-// 待办
-function addTodo(){const v=document.getElementById('todoInput').value.trim();if(!v)return;appData.todos.push({id:Date.now().toString(36),text:v,done:false});document.getElementById('todoInput').value='';saveLocal();renderPage('todos');showToast('\u2705 已添加');}
-function toggleTodo(id){const t=appData.todos.find(x=>x.id===id);if(t)t.done=!t.done;saveLocal();renderPage('todos');}
-function delTodo(id){appData.todos=appData.todos.filter(x=>x.id!==id);saveLocal();renderPage('todos');}
-
-// 笔记
-function saveFitnessNotes(){appData.fitness_notes=document.getElementById('fitnessNotes').value;saveLocal();showToast('\uD83D\uDCAA 健身笔记已保存');}
-function saveMealNotes(){appData.meal_notes=document.getElementById('mealNotes').value;saveLocal();showToast('\uD83C\uDF57 饮食笔记已保存');}
-
-// 弹窗
-function showDetail(title,content){
-document.getElementById('detailContent').innerHTML=`<h3>${escHtml(title)}</h3><p style="font-size:.95rem;line-height:1.8;">${escHtml(content).replace(/\\n/g,'<br>')}</p>`;
-document.getElementById('overlay').classList.add('show');
-document.getElementById('detailModal').classList.add('show');
-}
-function closeAllModals(){document.getElementById('overlay').classList.remove('show');document.querySelectorAll('.modal').forEach(m=>m.classList.remove('show'));}
-
-// 编辑资料
-function openEditProfile(){
-document.getElementById('editName').value=appData.profile.name;
-document.getElementById('editAvatar').value=appData.profile.avatar;
-document.getElementById('editSub').value=appData.profile.sub;
-document.getElementById('overlay').classList.add('show');
-document.getElementById('editModal').classList.add('show');
-}
-function saveProfile(){
-appData.profile.name=document.getElementById('editName').value.trim()||'爆单的林舒琪';
-appData.profile.avatar=document.getElementById('editAvatar').value.trim()||'\uD83D\uDC30';
-appData.profile.sub=document.getElementById('editSub').value.trim()||'';
-saveLocal();renderSidebar();closeAllModals();showToast('\u2705 已保存');
-}
-
-// 工具
-function getTodayKey(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
-function formatKey(d){return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
-function formatDate(d){const w=['日','一','二','三','四','五','六'];return `${d.getMonth()+1}月${d.getDate()}日 周${w[d.getDay()]}`;}
-function getGreeting(){const h=new Date().getHours();if(h<5)return'\uD83C\uDF19 夜深了，早点休息';if(h<12)return'\u2600\uFE0F 早上好';if(h<14)return'\uD83C\uDF5A 午安';if(h<18)return'\uD83C\uDFE4\uFE0F 下午好';return'\uD83C\uDFC7 晚上好，辛苦了';}
-function getCheckinTip(c,t){if(c===0)return'\uD83C\uDF31 新的一天，勾选开始打卡吧';if(c===t)return'\uD83C\uDF89 全部完成！太强了！';return `\uD83D\uDCAA 已完成 ${c}/${t}，还差 ${t-c} 项`;}
-function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function escJs(s){return String(s||'').replace(/'/g,"\\'").replace(/\n/g,'\\n');}
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
-
-// 每10分钟检测更新
-setInterval(fetchDataJson,600000);
-</script>
+<script src="data.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
