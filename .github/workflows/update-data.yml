@@ -20,12 +20,15 @@ jobs:
 
       - name: 生成数据文件
         run: |
-          # 1. 直接进入 workbench 文件夹（名字绝对正确）
+          # === 救命关键：强制拉取完整代码，确保子文件夹能被找到 ===
+          git pull
+          
+          echo "正在进入 workbench 文件夹..."
           cd workbench
           
           echo "正在生成 data.json..."
           
-          # 2. 执行转换逻辑
+          # 执行转换逻辑
           node -e "
           const fs = require('fs');
           try {
