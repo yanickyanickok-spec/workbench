@@ -20,15 +20,36 @@ jobs:
 
       - name: 生成数据文件
         run: |
-          cd workbench
+          # 使用引号包裹路径，彻底解决中文、空格、特殊字符问题
+          FOLDER="workbench 工作台"
+          
+          # 检查文件夹是否真的存在（做个保险）
+          if [ ! -d "$FOLDER" ]; then
+            echo "错误：找不到文件夹 '$FOLDER'"
+            echo "当前目录下的文件夹有："
+            ls -l
+            exit 1
+          fi
+          
+          echo "正在进入文件夹..."
+          cd "$FOLDER"
+          
           node -e "
           const fs = require('fs');
-          const raw = fs.readFileSync('data.js', 'utf-8');
-          const match = raw.match(/const DB = (\{[\s\S]*?\});/);
-          if (!match) { console.error('找不到 DB 数据'); process.exit(1); }
-          const data = eval('(' + match[1] + ')');
-          fs.writeFileSync('../data.json', JSON.stringify(data, null, 2));
-          console.log('data.json 已生成');
+          try {
+            const raw = fs.readFileSync('data.js', 'utf-8');
+            const match = raw.match(/const DB = (\{[\s\S]*?\});/);
+            if (!match) { 
+              console.error('❌ 在 data.js 中找不到 DB 数据，请检查文件内容'); 
+              process.exit(1); 
+            }
+            const data = eval('(' + match[1] + ')');
+            fs.writeFileSync('../data.json', JSON.stringify(data, null, 2));
+            console.log('✅ data.json 已成功生成');
+          } catch (err) {
+            console.error('❌ 读取文件失败:', err);
+            process.exit(1);
+          }
           "
           cd ..
           echo "更新时间: $(date +'%Y-%m-%d %H:%M:%S')" > update-log.txt
