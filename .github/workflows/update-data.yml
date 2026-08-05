@@ -20,17 +20,18 @@ jobs:
 
       - name: 生成数据文件
         run: |
-          echo "更新时间: $(date +'%Y-%m-%d %H:%M:%S')" > update-log.txt
+          cd workbench
           node -e "
           const fs = require('fs');
           const raw = fs.readFileSync('data.js', 'utf-8');
-          // 把 const DB = {...}; 转成 JSON
           const match = raw.match(/const DB = (\{[\s\S]*?\});/);
           if (!match) { console.error('找不到 DB 数据'); process.exit(1); }
           const data = eval('(' + match[1] + ')');
-          fs.writeFileSync('data.json', JSON.stringify(data, null, 2));
+          fs.writeFileSync('../data.json', JSON.stringify(data, null, 2));
           console.log('data.json 已生成');
           "
+          cd ..
+          echo "更新时间: $(date +'%Y-%m-%d %H:%M:%S')" > update-log.txt
 
       - name: 提交更新
         run: |
