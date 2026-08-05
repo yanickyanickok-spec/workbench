@@ -2,12 +2,14 @@ name: 每日数据更新
 
 on:
   schedule:
-    - cron: '0 8 * * *'   # 每天北京时间 16:00 跑（UTC 08:00）
-  workflow_dispatch:        # 允许手动触发
+    - cron: '0 8 * * *'
+  workflow_dispatch:
 
 jobs:
   update:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -18,10 +20,14 @@ jobs:
 
       - name: 生成数据文件
         run: |
-          echo "数据更新时间: $(date +'%Y-%m-%d %H:%M:%S')" > update-log.txt
+          echo "更新时间: $(date +'%Y-%m-%d %H:%M:%S')" > update-log.txt
           node -e "
           const fs = require('fs');
-          const data = require('./data.js');
+          const raw = fs.readFileSync('data.js', 'utf-8');
+          // 把 const DB = {...}; 转成 JSON
+          const match = raw.match(/const DB = (\{[\s\S]*?\});/);
+          if (!match) { console.error('找不到 DB 数据'); process.exit(1); }
+          const data = eval('(' + match[1] + ')');
           fs.writeFileSync('data.json', JSON.stringify(data, null, 2));
           console.log('data.json 已生成');
           "
